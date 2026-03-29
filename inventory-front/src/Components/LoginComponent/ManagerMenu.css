@@ -1,0 +1,373 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ManagerMenu.css – Premium Manager Dashboard UI (Teal/Green Theme)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.mm-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf9 100%);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header Styles */
+.mm-header {
+  background: linear-gradient(145deg, #0f766e 0%, #0d9488 45%, #14b8a6 80%, #2dd4bf 100%);
+  box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.mm-header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.mm-logo-badge {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.mm-header-text {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.mm-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  padding-left: 40px;
+  padding-top: 6px;
+}
+
+.mm-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 2px;
+  padding-left: 40px;
+}
+
+.mm-user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.1);
+  padding: 8px 16px 8px 12px;
+  border-radius: 40px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.mm-user-avatar {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mm-user-avatar svg {
+  width: 22px;
+  height: 22px;
+  color: white;
+}
+
+.mm-user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.mm-logout-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mm-logout-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+
+/* Main Content */
+.mm-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+  
+}
+
+/* Welcome Banner */
+.mm-welcome-banner {
+  background: linear-gradient(135deg, #0d948810, #14b8a610);
+  border: 1px solid #0d948820;
+  border-radius: 20px;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  backdrop-filter: blur(8px);
+}
+
+.mm-welcome-text h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #134e4a;
+  margin-bottom: 6px;
+}
+
+.mm-welcome-text p {
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.mm-stats-pill {
+  background: white;
+  padding: 8px 20px;
+  border-radius: 40px;
+  box-shadow: 0 4px 12px rgba(13,148,136,0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #0d9488;
+}
+
+.mm-status-dot {
+  width: 10px;
+  height: 10px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+
+
+/* Menu Grid */
+.mm-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 300px;
+}
+
+.mm-menu-section {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #e6f7f5;
+  transition: all 0.2s;
+}
+
+.mm-menu-section:hover {
+  box-shadow: 0 12px 24px rgba(13,148,136,0.1);
+}
+
+.mm-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e6f7f5;
+}
+
+.mm-section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mm-section-icon svg {
+  width: 22px;
+  height: 22px;
+  color: white;
+}
+
+.mm-section-icon.teal-bg {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+}
+
+.mm-section-icon.emerald-bg {
+  background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.mm-section-icon.green-bg {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+}
+
+.mm-section-icon.cyan-bg {
+  background: linear-gradient(135deg, #06b6d4, #22d3ee);
+}
+
+.mm-section-header h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #134e4a;
+}
+
+.mm-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mm-menu-item {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f0fdf9;
+  border: 1px solid #d9f0ec;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #115e59;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.mm-menu-item:hover {
+  background: #ccf0ea;
+  border-color: #0d9488;
+  color: #0d9488;
+  transform: translateX(4px);
+}
+
+.mm-menu-item svg {
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.mm-menu-item:hover svg {
+  color: #0d9488;
+}
+
+
+
+
+.mm-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.mm-activity-item:hover {
+  background: #f0fdf9;
+  transform: translateX(4px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Footer */
+.mm-footer {
+  text-align: center;
+  padding: 24px 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  border-top: 1px solid #d9f0ec;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mm-header-content {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .mm-header-text {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .mm-title {
+    font-size: 1.5rem;
+  }
+
+  .mm-user-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mm-main {
+    padding: 20px;
+  }
+
+ .mm-welcome-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .mm-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mm-menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mm-stat-card {
+    padding: 16px;
+  }
+}

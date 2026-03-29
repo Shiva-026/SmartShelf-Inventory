@@ -1,0 +1,278 @@
+/* ═══════════════════════════════════════════════════════════════════
+   VendorMenu.css – Premium Vendor Portal UI (Orange Theme)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.vm-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header Styles */
+.vm-header {
+  background: linear-gradient(145deg, #c2410c 0%, #f97316 45%, #fb923c 80%, #fdba74 100%);
+  box-shadow: 0 4px 20px rgba(249,115,22,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.vm-header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.vm-logo-badge {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.vm-header-text {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.vm-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  padding-left: 40px;
+  padding-top: 6px;
+}
+
+.vm-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 2px;
+  padding-left: 40px;
+}
+
+.vm-logout-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.vm-logout-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+
+/* Main Content */
+.vm-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+/* Welcome Banner */
+.vm-welcome-banner {
+  background: linear-gradient(135deg, #f9731610, #fb923c10);
+  border: 1px solid #f9731620;
+  border-radius: 20px;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  backdrop-filter: blur(8px);
+}
+
+.vm-welcome-text h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #7b341e;
+  margin-bottom: 6px;
+}
+
+.vm-welcome-text p {
+  color: #57534e;
+  font-size: 0.95rem;
+}
+
+.vm-stats-pill {
+  background: white;
+  padding: 8px 20px;
+  border-radius: 40px;
+  box-shadow: 0 4px 12px rgba(249,115,22,0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #f97316;
+}
+
+.vm-status-dot {
+  width: 10px;
+  height: 10px;
+  background: #f97316;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+
+.vm-user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.1);
+  padding: 8px 16px 8px 12px;
+  border-radius: 40px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.vm-user-avatar {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vm-user-avatar svg {
+  width: 22px;
+  height: 22px;
+  color: white;
+}
+.vm-user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Menu Card */
+.vm-menu-card {
+  /* background: #f1e9e9; */
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #ffedd5; 
+  max-width: 600px;
+ 
+  margin-bottom: 400px;
+}
+
+.vm-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vm-menu-item {
+  width: 100%;
+  padding: 16px 24px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #9a3412;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.vm-menu-item:hover {
+  background: #fed7aa;
+  border-color: #f97316;
+  color: #f97316;
+  transform: translateX(4px);
+}
+
+.vm-menu-item svg {
+  color: #f6f6f6;
+  transition: color 0.2s;
+}
+
+.vm-menu-item:hover svg {
+  color: #f97316;
+}
+
+
+
+/* Footer */
+.vm-footer {
+  text-align: center;
+  padding: 40px 0 24px;
+  color: #a8a29e;
+  font-size: 0.85rem;
+  border-top: 1px solid #d9f0ec;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vm-header-content {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .vm-header-text {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .vm-title {
+    font-size: 1.5rem;
+  }
+
+  .vm-main {
+    padding: 20px;
+  }
+
+  .vm-welcome-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .vm-menu-card {
+    padding: 24px;
+  }
+
+  .vm-menu-item {
+    padding: 14px 20px;
+  }
+}
