@@ -275,4 +275,55 @@
   .vm-menu-item {
     padding: 14px 20px;
   }
+  .vm-menu-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100%;
+  padding: 18px 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.vm-menu-item:hover {
+  background: rgba(249, 115, 22, 0.07);
+}
+
+.vm-menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.vm-menu-icon {
+  font-size: 1.4rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(249, 115, 22, 0.13);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.vm-menu-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: left;
+}
+
+.vm-menu-desc {
+  display: block;
+  font-size: 0.82rem;
+  color: #9099b5;
+  margin-top: 3px;
+  font-weight: 400;
+  text-align: left;
+}
+
 }

@@ -1,263 +1,540 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById, editProductStock } from '../../Services/ProductService';
 import { getUserId } from '../../Services/LoginService';
 import { transactionIdGenerate, saveTransaction } from '../../Services/TransactionService';
 
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .pse-root {
+    min-height: 100vh;
+    background: #eeecf8;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  /* ── Card ── */
+  .pse-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 32px rgba(80,60,180,0.10);
+    border: 1px solid #e8e4f8;
+    width: 100%;
+    max-width: 640px;
+    overflow: hidden;
+  }
+
+  /* ── Top accent bar — green for IN, red for OUT ── */
+  .pse-card-top-in  { height: 6px; background: linear-gradient(90deg, #1a8a52, #34d399); }
+  .pse-card-top-out { height: 6px; background: linear-gradient(90deg, #c0392b, #e74c3c); }
+
+  .pse-body { padding: 36px 36px 32px; }
+
+  /* ── Title ── */
+  .pse-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .pse-icon-in {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1a8a52, #34d399);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .pse-icon-out {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .pse-title { font-size: 1.55rem; font-weight: 700; color: #1a1d2e; letter-spacing: -0.4px; }
+  .pse-subtitle { font-size: 0.88rem; color: #9099b5; margin-top: 2px; }
+
+  /* ── Info grid ── */
+  .pse-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #f6f4fd;
+    border: 1.5px solid #e8e4f8;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .pse-info-cell {
+    padding: 13px 18px;
+    border-right: 1px solid #e8e4f8;
+    border-bottom: 1px solid #e8e4f8;
+  }
+  .pse-info-cell:nth-child(2n) { border-right: none; }
+  .pse-info-cell.full { grid-column: 1 / -1; border-right: none; }
+  .pse-info-cell:last-child { border-bottom: none; }
+  .pse-info-cell:nth-last-child(2):not(.full) { border-bottom: none; }
+
+  .pse-info-label {
+    font-size: 0.75rem; font-weight: 600;
+    color: #9099b5; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 5px;
+  }
+  .pse-info-value { font-size: 1rem; font-weight: 600; color: #1a1d2e; }
+  .pse-info-value.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem; color: #6b7399; font-weight: 500;
+  }
+  .pse-info-value.green { color: #1a8a52; font-size: 1.05rem; }
+  .pse-info-value.red   { color: #c0392b; font-size: 1.05rem; }
+
+  /* ── Divider ── */
+  .pse-divider { height: 1px; background: #eef0f8; margin-bottom: 24px; }
+
+  /* ── Form fields ── */
+  .pse-field { margin-bottom: 20px; }
+  .pse-label {
+    display: block;
+    font-size: 0.92rem; font-weight: 600;
+    color: #1a1d2e; margin-bottom: 8px;
+  }
+  .pse-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #dde1f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #1a1d2e;
+    background: #f8f7fd;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .pse-input:focus {
+    border-color: #6c3fe0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(108,63,224,0.12);
+  }
+  .pse-input:read-only {
+    background: #f0eef8;
+    color: #6b7399;
+    cursor: not-allowed;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+  .pse-input.pse-input-error {
+    border-color: #e74c3c;
+    background: #fff8f8;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.10);
+  }
+
+  /* ── Inline field error ── */
+  .pse-field-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 7px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #c0392b;
+    animation: pse-fadein 0.2s ease;
+  }
+
+  /* ── Transaction value banner ── */
+  .pse-trans-value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0eef8;
+    border: 1.5px solid #d4c9f8;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    animation: pse-fadein 0.3s ease;
+  }
+  .pse-trans-value-icon { font-size: 1.15rem; }
+  .pse-trans-value-label { font-size: 0.82rem; color: #9099b5; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .pse-trans-value-amount { font-size: 1.2rem; font-weight: 700; color: #6c3fe0; margin-top: 2px; }
+
+  /* ── Reorder warning ── */
+  .pse-warn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff8e6;
+    border: 1.5px solid #f7c948;
+    border-radius: 10px;
+    padding: 13px 18px;
+    margin-bottom: 18px;
+    animation: pse-fadein 0.25s ease;
+  }
+  .pse-warn-icon { font-size: 1.1rem; margin-top: 1px; }
+  .pse-warn-title { font-size: 0.95rem; font-weight: 700; color: #a05c00; }
+  .pse-warn-sub   { font-size: 0.82rem; color: #c07800; margin-top: 2px; }
+
+  /* ── API error banner ── */
+  .pse-banner-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff0f0;
+    border: 1.5px solid #ffc5c5;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    animation: pse-fadein 0.25s ease;
+  }
+  .pse-banner-error-icon  { font-size: 1.15rem; margin-top: 1px; }
+  .pse-banner-error-title { font-size: 0.95rem; font-weight: 700; color: #c0392b; }
+  .pse-banner-error-sub   { font-size: 0.82rem; color: #e07070; margin-top: 3px; }
+
+  /* ── Success banner ── */
+  .pse-success {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #e6f9f0;
+    border: 1.5px solid #b3ecd4;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    animation: pse-fadein 0.3s ease;
+  }
+  .pse-success-icon { font-size: 1.2rem; }
+  .pse-success-text { font-size: 0.95rem; font-weight: 600; color: #1a8a52; }
+  .pse-success-sub  { font-size: 0.82rem; color: #3aaa75; margin-top: 2px; }
+
+  @keyframes pse-fadein {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Buttons ── */
+  .pse-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .pse-btn-save-in {
+    flex: 1;
+    padding: 13px 20px;
+    background: linear-gradient(135deg, #1a8a52, #34d399);
+    color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .pse-btn-save-in:hover {
+    opacity: 0.9; transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26,138,82,0.28);
+  }
+
+  .pse-btn-save-out {
+    flex: 1;
+    padding: 13px 20px;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .pse-btn-save-out:hover {
+    opacity: 0.9; transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(192,57,43,0.28);
+  }
+
+  .pse-btn-reset {
+    padding: 13px 20px;
+    background: #f0eef8; color: #6c3fe0;
+    border: 1.5px solid #d4c9f8; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .pse-btn-reset:hover {
+    background: #e4dff8; transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(108,63,224,0.15);
+  }
+
+  .pse-btn-return {
+    padding: 13px 20px;
+    background: #f4f5f7; color: #3a3f5c;
+    border: 1.5px solid #dde1f0; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .pse-btn-return:hover {
+    background: #e8eaf0; transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+`;
 
 const ProductStockEdit = () => {
-    const [product, setProduct] = useState({
-        productId: "",
-        productName: "",
-        skuId: "",
-        purchasePrice: 0.0,
-        salesPrice: 0.0,
-        reorderLevel: 0.0,
-        stock: 0.0,
-        vendorId: "",
-        status: true,
-    });
-    const [newId, setNewId] = useState(0);
-    const [errors, setErrors] = useState({});
-    const [flag, setFlag] = useState("");
-    const [userId, setUserId] = useState("");
-    const [tdate, setTdate] = useState(new Date());
-    const [transaction, setTransaction] = useState({
-        transactionId: 0,
-        transactionType: "",
-        productId: "",
-        rate: 0.0,
-        quantity: 0.0,
-        transactionValue: 0.0,
-        userId: "",
-        transactionDate: new Date(),
-    });
-    let navigate = useNavigate();
-    let param = useParams();
-    const [quantity, setQuantity] = useState(0.0);
-    const [transValue, setTransValue] = useState(null);
-    const [warns, setWarns] = useState(null);
+  const param    = useParams();
+  const navigate = useNavigate();
 
-    const setProductData = () => {
-        getProductById(param.pid).then(response => {
-            setProduct(response.data);
-            setFlag(param.no);
-        });
+  const [product, setProduct] = useState({
+    productId: '', productName: '', skuId: '',
+    purchasePrice: 0, salesPrice: 0,
+    reorderLevel: 0, stock: 0, vendorId: '', status: true,
+  });
+  const [newId, setNewId]       = useState(0);
+  const [flag, setFlag]         = useState('');
+  const [userId, setUserId]     = useState('');
+  const [tdate, setTdate]       = useState(new Date().toISOString().split('T')[0]);
+  const [quantity, setQuantity] = useState('');
+  const [transValue, setTransValue] = useState(null);
+  const [warns, setWarns]       = useState(null);
+  const [fieldError, setFieldError] = useState('');
+  const [apiError, setApiError]     = useState('');
+  const [success, setSuccess]       = useState(false);
+
+  const [transaction] = useState({
+    transactionId: 0, transactionType: '', productId: '',
+    rate: 0, quantity: 0, transactionValue: 0, userId: '', transactionDate: new Date(),
+  });
+
+  useEffect(() => {
+    getProductById(param.pid).then(res => { setProduct(res.data); setFlag(param.no); });
+    getUserId().then(res => setUserId(res.data));
+    transactionIdGenerate(param.no).then(res => setNewId(res.data));
+  }, []);
+
+  const isPurchase = parseInt(flag) === 1;
+
+  // Clear errors as user types
+  const handleQuantityChange = (e) => {
+    setQuantity(e.target.value);
+    if (fieldError) setFieldError('');
+    if (apiError)   setApiError('');
+  };
+
+  const validate = () => {
+    if (quantity === '' || quantity === null) {
+      setFieldError('Quantity is required.');
+      return false;
     }
-
-    const setUserData = () => {
-        getUserId().then(response => {
-            setUserId(response.data);
-        });
+    if (parseFloat(quantity) <= 0) {
+      setFieldError('Quantity must be greater than 0.');
+      return false;
     }
-
-    const setTransactionId = () => {
-        transactionIdGenerate(param.no).then(response => {
-            setNewId(response.data);
-        })
+    if (!isPurchase && parseFloat(quantity) > product.stock) {
+      setFieldError(`Issued quantity cannot exceed current stock (${product.stock}).`);
+      return false;
     }
+    return true;
+  };
 
-    useEffect(() => {
-        setProductData();
-        setUserData();
-        setTransactionId();
-    }, []);
+  const stockEdit = (e) => {
+    e.preventDefault();
+    setApiError('');
+    setWarns(null);
+    setTransValue(null);
 
-    const returnBack = () => {
-        navigate('/product-list');
-    }
+    if (!validate()) return;
 
-    const clearAll = () => {
-        setQuantity(0.0);
-    }
-
-    /*const stockEdit = (event) => {
-        event.preventDefault();
-        transaction.transactionId = newId;
-        transaction.productId = product.productId;
-        transaction.quantity = quantity;
-        transaction.userId = userId;
-        transaction.transactionDate = tdate;
-        if (flag === "1") {
-            transaction.transactionType = "IN";
-            transaction.rate = product.purchasePrice;
-        }
-        else if (flag === "2") {
-            transaction.transactionType = "OUT";
-            transaction.rate = product.salesPrice;
-        }
-        transaction.transactionValue = parseFloat(transaction.rate) * parseFloat(quantity);
-        setTransValue(transaction.transactionValue);
-        if (flag === "2") {
-            let balance = product.stock - quantity;
-            if (balance <= product.reorderLevel)
-                setWarns("Stock reached to Re-Order Level.....")
-        }
-        saveTransaction(transaction).then(response => {
-        });
-        editProductStock(product, quantity, flag).then(response => {
-});
-    }*/
-
-const stockEdit = (event) => {
-    event.preventDefault();
-
-    // Create a local copy of the transaction to avoid state-delay issues
     const currentTransaction = {
-        ...transaction,
-        transactionId: newId,
-        productId: product.productId,
-        quantity: quantity,
-        userId: userId,
-        transactionDate: tdate,
-        transactionType: flag === "1" ? "IN" : "OUT",
-        rate: flag === "1" ? product.purchasePrice : product.salesPrice
+      ...transaction,
+      transactionId: newId,
+      productId: product.productId,
+      quantity: parseFloat(quantity),
+      userId,
+      transactionDate: tdate,
+      transactionType: isPurchase ? 'IN' : 'OUT',
+      rate: isPurchase ? product.purchasePrice : product.salesPrice,
     };
-
     currentTransaction.transactionValue = parseFloat(currentTransaction.rate) * parseFloat(quantity);
     setTransValue(currentTransaction.transactionValue);
 
-    if (flag === "2") {
-        let balance = product.stock - quantity;
-        if (balance <= product.reorderLevel) {
-            setWarns("Stock reached to Re-Order Level...");
-        }
+    if (!isPurchase) {
+      const balance = product.stock - parseFloat(quantity);
+      if (balance <= product.reorderLevel) {
+        setWarns(`After this issue, stock (${balance}) will be at or below reorder level (${product.reorderLevel}).`);
+      }
     }
 
-    // --- CHAINED API CALLS ---
     saveTransaction(currentTransaction)
-        .then(() => {
-            // Only update stock if transaction saved successfully
-            return editProductStock(product, quantity, flag);
-        })
-        .then(() => {
-            alert("Inventory Updated Successfully!");
-            navigate('/product-list'); // Return to list to see updated numbers
-        })
-        .catch(error => {
-            console.error("Update Error:", error);
-            alert("Failed to update stock. Check network tab.");
-        });
-};
+      .then(() => editProductStock(product, quantity, flag))
+      .then(() => {
+        setSuccess(true);
+        setTimeout(() => navigate('/product-repo'), 4000);
+      })
+      .catch(err => {
+        console.error('Update Error:', err);
+        setApiError('Failed to update stock. Please check your connection and try again.');
+      });
+  };
 
+  return (
+    <>
+      <style>{styles}</style>
+      <div className="pse-root">
+        <div className="pse-card">
 
-    const handleValidation = (event) => {
-        event.preventDefault();
-        let tempErrors = {};
-        let isValid = true;
+          {/* ── Accent bar ── */}
+          <div className={isPurchase ? 'pse-card-top-in' : 'pse-card-top-out'} />
 
-        if (!toString(quantity).trim()) {
-            tempErrors.quantity = "Transaction Quantity is required";
-            isValid = false;
-        }
-        else if (parseFloat(quantity) <= 0) {
-            tempErrors.quantity = "Transaction Quantity cannot be 0 or negetive";
-            isValid = false;
-        }
+          <div className="pse-body">
 
-        if (flag === "2") {
-            if (parseFloat(quantity) > product.stock) {
-                tempErrors.quantity = "Issued Quantity cannot be more than stock";
-                isValid = false;
-            }
-        }
+            {/* ── Title ── */}
+            <div className="pse-title-row">
+              <div className={isPurchase ? 'pse-icon-in' : 'pse-icon-out'}>
+                {isPurchase ? '📥' : '📤'}
+              </div>
+              <div>
+                <div className="pse-title">
+                  {isPurchase ? 'Stock Purchase Entry' : 'Stock Issue Entry'}
+                </div>
+                <div className="pse-subtitle">
+                  {isPurchase ? 'Record incoming stock for this product' : 'Record outgoing stock for this product'}
+                </div>
+              </div>
+            </div>
 
-        setErrors(tempErrors);
-        if (isValid) {
-            stockEdit(event);
-        }
-    };
+            {/* ── Product info grid ── */}
+            <div className="pse-info-grid">
+              <div className="pse-info-cell">
+                <div className="pse-info-label">Product ID</div>
+                <div className="pse-info-value mono">{product.productId}</div>
+              </div>
+              <div className="pse-info-cell">
+                <div className="pse-info-label">SKU ID</div>
+                <div className="pse-info-value mono">{product.skuId}</div>
+              </div>
+              <div className="pse-info-cell full">
+                <div className="pse-info-label">Product Name</div>
+                <div className="pse-info-value">{product.productName}</div>
+              </div>
+              <div className="pse-info-cell">
+                <div className="pse-info-label">{isPurchase ? 'Purchase Price' : 'Sales Price'}</div>
+                <div className={`pse-info-value ${isPurchase ? 'green' : 'red'}`}>
+                  ₹{isPurchase ? product.purchasePrice : product.salesPrice}
+                </div>
+              </div>
+              <div className="pse-info-cell">
+                <div className="pse-info-label">Current Stock</div>
+                <div className="pse-info-value" style={{ fontWeight: 700 }}>{product.stock}</div>
+              </div>
+              <div className="pse-info-cell full">
+                <div className="pse-info-label">Reorder Level</div>
+                <div className="pse-info-value">{product.reorderLevel}</div>
+              </div>
+            </div>
 
-    return (
-  <div className="form-background">
-    <div style={{width: '100%', maxWidth: '600px'}}>
-      <div className="form-card">
-        <h2 className="form-title">
-          {parseInt(flag)===1 ? "Stock Purchase Entry" : "Stock Issue Entry"}
-        </h2>
+            <div className="pse-divider" />
 
-        <div style={{background: '#f8fafb', padding: '20px', borderRadius: '8px', marginBottom: '25px', border: '1px solid #e0e6ed'}}>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px'}}>
-            <div>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>Product ID</p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>{product.productId}</p>
+            {/* ── Transaction ID ── */}
+            <div className="pse-field">
+              <label className="pse-label">Transaction ID</label>
+              <input className="pse-input" value={newId} readOnly />
             </div>
-            <div>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>SKU ID</p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>{product.skuId}</p>
+
+            {/* ── Date ── */}
+            <div className="pse-field">
+              <label className="pse-label">Transaction Date</label>
+              <input
+                className="pse-input"
+                type="date"
+                value={tdate}
+                onChange={e => setTdate(e.target.value)}
+              />
             </div>
-            <div style={{gridColumn: '1 / -1'}}>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>Product Name</p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>{product.productName}</p>
+
+            {/* ── Quantity ── */}
+            <div className="pse-field">
+              <label className="pse-label">
+                {isPurchase ? 'Enter Purchased Quantity' : 'Enter Issued Quantity'}
+              </label>
+              <input
+                className={`pse-input ${fieldError ? 'pse-input-error' : ''}`}
+                type="number"
+                placeholder="Enter quantity"
+                value={quantity}
+                onChange={handleQuantityChange}
+              />
+              {fieldError && (
+                <div className="pse-field-error">
+                  ⚠️ {fieldError}
+                </div>
+              )}
             </div>
-            <div>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>
-                {parseInt(flag)===1 ? "Purchase Price" : "Sales Price"}
-              </p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>
-                ₹{parseInt(flag)===1 ? product.purchasePrice : product.salesPrice}
-              </p>
+
+            {/* ── Transaction value ── */}
+            {transValue !== null && (
+              <div className="pse-trans-value">
+                <span className="pse-trans-value-icon">🧾</span>
+                <div>
+                  <div className="pse-trans-value-label">Transaction Value</div>
+                  <div className="pse-trans-value-amount">₹{transValue.toLocaleString()}</div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Reorder warning ── */}
+            {warns && (
+              <div className="pse-warn">
+                <span className="pse-warn-icon">⚠️</span>
+                <div>
+                  <div className="pse-warn-title">Reorder Level Reached</div>
+                  <div className="pse-warn-sub">{warns}</div>
+                </div>
+              </div>
+            )}
+
+            {/* ── API error ── */}
+            {apiError && (
+              <div className="pse-banner-error">
+                <span className="pse-banner-error-icon">❌</span>
+                <div>
+                  <div className="pse-banner-error-title">Update Failed</div>
+                  <div className="pse-banner-error-sub">{apiError}</div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Success ── */}
+            {success && (
+              <div className="pse-success">
+                <span className="pse-success-icon">✅</span>
+                <div>
+                  <div className="pse-success-text">Inventory updated successfully!</div>
+                  <div className="pse-success-sub">Redirecting to product list in 4 seconds…</div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Buttons ── */}
+            <div className="pse-btn-row">
+              <button
+                className={isPurchase ? 'pse-btn-save-in' : 'pse-btn-save-out'}
+                onClick={stockEdit}
+                type="button"
+              >
+                {isPurchase ? '📥 Save Purchase' : '📤 Save Issue'}
+              </button>
+              <button className="pse-btn-reset" onClick={() => { setQuantity(''); setFieldError(''); setApiError(''); setTransValue(null); setWarns(null); }} type="button">
+                Reset
+              </button>
+              <button className="pse-btn-return" onClick={() => navigate('/product-repo')} type="button">
+                ← Return
+              </button>
             </div>
-            <div>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>Current Stock</p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>{product.stock}</p>
-            </div>
-            <div>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>Re-Order Level</p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>{product.reorderLevel}</p>
-            </div>
-            <div style={{gridColumn: '1 / -1'}}>
-              <p style={{fontSize: '12px', color: '#95a5a6', marginBottom: '4px'}}>Vendor</p>
-              <p style={{fontWeight: '600', color: '#2c3e50'}}>{product.vendorId}</p>
-            </div>
+
           </div>
         </div>
-
-        <form>
-          <div className="form-group">
-            <label>Transaction ID</label>
-            <input name="transactionId" className="form-control" value={newId} readOnly/>
-          </div>
-          <div className="form-group">
-            <label>Transaction Date</label>
-            <input type="date" className="form-control" value={tdate} onChange={(event)=>setTdate(event.target.value)}/>
-          </div>
-          <div className="form-group">
-            <label>
-              {parseInt(flag)===1 ? "Enter Purchased Quantity" : "Enter Issued Quantity"}
-            </label>
-            <input placeholder="Quantity" name="quantity" className="form-control" value={quantity} onChange={(event)=>setQuantity(event.target.value)}/>
-            {errors.quantity && <p className="error">{errors.quantity}</p>}
-          </div>
-
-          {transValue !== null && (
-            <div style={{background: '#ecf0f7', padding: '15px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center', borderLeft: '4px solid #667eea'}}>
-              <p style={{color: '#667eea', fontWeight: '600', margin: 0}}>Transaction Value: ₹{transValue}</p>
-            </div>
-          )}
-
-          {warns !== null && (
-            <div style={{background: '#fadbd8', padding: '15px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center', borderLeft: '4px solid #e74c3c'}}>
-              <p style={{color: '#e74c3c', fontWeight: '600', margin: 0}}>{warns}</p>
-            </div>
-          )}
-
-          <div className="form-buttons">
-            <button className="primary-btn" onClick={handleValidation} type="button">Save</button>
-            <button className="secondary-btn" onClick={clearAll} type="button">Reset</button>
-            <button style={{background: '#e0e6ed', color: '#2c3e50', border: 'none', padding: '12px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.3s ease'}}
-                    onClick={returnBack} type="button">Return</button>
-          </div>
-        </form>
       </div>
-    </div>
-  </div>
-);
-
-
-
-
-
-}
+    </>
+  );
+};
 
 export default ProductStockEdit;

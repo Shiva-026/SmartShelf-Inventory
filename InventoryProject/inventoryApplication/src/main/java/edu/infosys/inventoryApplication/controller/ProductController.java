@@ -75,7 +75,7 @@ public class ProductController {
 		productDao.saveProduct(updatedProduct);
 	}
 
-	  @GetMapping("id-gen")
+	  @GetMapping("/id-gen")
     public String ProductIdGenerator() {
     	return service.generateProductId();
     }

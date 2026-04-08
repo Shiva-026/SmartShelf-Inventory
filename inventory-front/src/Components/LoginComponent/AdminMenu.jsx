@@ -118,22 +118,16 @@ const AdminMenu = () => {
                     <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
                   </svg>
                 </button>
-                
-                {/* Product Analysis Dropdown */}
-                <div className="am-dropdown-container">
-                  <button className="am-menu-item am-dropdown-trigger">
-                    <span>Product Analysis</span>
-                    <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  <div className="am-dropdown-content">
-                    <button onClick={() => navigateTo('/product-pie')}>All Products Analysis</button>
-                    <button onClick={() => navigateTo('/product-analysis/single')}>Single Product Demand</button>
-                  </div>
-                </div>
+                <button className="am-menu-item" onClick={() => navigateTo('/product-pie')}>
+                  <span>Product Pie Analysis</span>
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              
               </div>
             </div>
+
 
             {/* Transaction Reports */}
             <div className="am-menu-section">

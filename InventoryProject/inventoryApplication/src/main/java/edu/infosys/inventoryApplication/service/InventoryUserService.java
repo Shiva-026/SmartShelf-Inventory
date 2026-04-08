@@ -52,6 +52,9 @@ public class InventoryUserService implements UserDetailsService{
 	this.role=user.getRole();
 	return this.user;
 }
+	public List<inventoryUser> getAllUsers() {
+	       return repository.findAll();
+	}
 	
 
 }

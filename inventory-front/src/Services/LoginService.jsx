@@ -1,7 +1,8 @@
 import axios from 'axios';
  
 const LOGIN_URL='http://localhost:9191/invent/login';
-const ROLE_URL='http://localhost:9191/invent/role';
+const ROLE_URL  = 'http://localhost:9191/invent/users/role'; // for list
+const SINGLE_ROLE_URL = 'http://localhost:9191/invent/role';
 const LOGOUT_URL = 'http://localhost:9191/invent/logout';
 const USR_URL = 'http://localhost:9191/invent/user';
 
@@ -27,7 +28,7 @@ const USR_URL = 'http://localhost:9191/invent/user';
 
 
 	export const getRole = () => {
-		return axios.get(ROLE_URL, {
+		return axios.get(SINGLE_ROLE_URL, {
             withCredentials : true
         });
 	};
@@ -51,5 +52,8 @@ const USR_URL = 'http://localhost:9191/invent/user';
             })
 	    };
 
-    
- 
+        export const getAllUsers = () =>{
+            return axios.get('http://localhost:9191/invent/users', {
+                 withCredentials: true 
+                });
+        };

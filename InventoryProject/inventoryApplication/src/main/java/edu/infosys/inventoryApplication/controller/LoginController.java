@@ -46,14 +46,36 @@ public class LoginController {
 	}
 	
 	@GetMapping("/login/{userId}/{password}")
-	public String validateUser(@PathVariable String userId,@PathVariable String password) {
-		String role="false";
-		try {
-			 Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userId, password));
-		 	    role=service.getRole();
-		 	     SecurityContextHolder.getContext().setAuthentication(authentication);
-			}catch(Exception ex) {}
-		return role;
+public String validateUser(@PathVariable String userId,
+                           @PathVariable String password,
+                           HttpServletRequest request) {
+
+    String role = "false";
+
+    try {
+        Authentication authentication =
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userId, password)
+            );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 🔥 CRITICAL LINE (this was missing)
+        HttpSession session = request.getSession(true);
+        session.setAttribute("SPRING_SECURITY_CONTEXT",
+                SecurityContextHolder.getContext());
+
+        role = service.getRole();
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+
+    return role;
+}
+	@GetMapping("/users")
+	public List<inventoryUser> getAllUsers() {
+	    return service.getAllUsers();
 	}
 	
 	@GetMapping("/login")

@@ -14,6 +14,12 @@ import SKUEdit from './Components/SKUComponent/SKUEdit';
 import ProductStockEdit from './Components/ProductComponent/ProductStockEdit';
 import TransactionReport from './Components/ProductComponent/TransactionReport';
 import ProductPieAnalysis from './Components/AnalysisComponent/ProductPieAnalysis';
+import UserManagement from './Components/UserManagement';
+import VendorSKUList from './Components/SKUComponent/VendorSKUList';
+import VendorProductList from './Components/ProductComponent/VendorProductList';
+// In your index.js or App.js
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function App() {
   return (
@@ -40,7 +46,9 @@ function App() {
           <Route path="/trans-repo/:pid" element = {<TransactionReport/>}></Route>
           <Route path="/product-pie" element = {<ProductPieAnalysis/>}></Route>
 
-          
+          <Route path="/users" element={<UserManagement/>}></Route>
+          <Route path="/sku-lists"     element={<VendorSKUList />} />
+          <Route path="/product-list" element={<VendorProductList />} />
         
 
         </Routes>

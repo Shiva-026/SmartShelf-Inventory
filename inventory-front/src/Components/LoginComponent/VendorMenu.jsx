@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../Services/LoginService';
 import './VendorMenu.css';
@@ -16,7 +16,7 @@ const VendorMenu = () => {
 
   return (
     <div className="vm-root">
-      {/* Header with gradient */}
+      {/* Header */}
       <div className="vm-header">
         <div className="vm-header-content">
           <div className="vm-logo-badge">
@@ -25,11 +25,12 @@ const VendorMenu = () => {
               <path d="M8 11h16M8 16h12M8 21h14" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </div>
-          
+
           <div className="vm-header-text">
             <h1 className="vm-title">Vendor Portal</h1>
             <p className="vm-subtitle">Inventory Management System</p>
           </div>
+
           <div className="mm-user-info">
             <div className="mm-user-avatar">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -50,7 +51,7 @@ const VendorMenu = () => {
       {/* Main Content */}
       <div className="vm-main">
         <div className="vm-container">
-          
+
           {/* Welcome Banner */}
           <div className="vm-welcome-banner">
             <div className="vm-welcome-text">
@@ -63,15 +64,38 @@ const VendorMenu = () => {
             </div>
           </div>
 
-          {/* Simple Menu Card */}
+          {/* Menu Card */}
           <div className="vm-menu-card">
             <div className="vm-menu-items">
-              <button className="vm-menu-item" onClick={() => navigate('/user-details')}>
-                <span>Show User Details</span>
+
+              {/* SKU List */}
+              <button className="vm-menu-item" onClick={() => navigate('/sku-lists')}>
+                <div className="vm-menu-item-left">
+                  <span className="vm-menu-icon">🏷️</span>
+                  <div>
+                    <span className="vm-menu-label">SKU List</span>
+                   
+                  </div>
+                </div>
                 <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
                   <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                 </svg>
               </button>
+
+              {/* Product List */}
+              <button className="vm-menu-item" onClick={() => navigate('/product-list')}>
+                <div className="vm-menu-item-left">
+                  <span className="vm-menu-icon">📦</span>
+                  <div>
+                    <span className="vm-menu-label">Product List</span>
+                    
+                  </div>
+                </div>
+                <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+
             </div>
           </div>
 
@@ -79,6 +103,7 @@ const VendorMenu = () => {
           <div className="vm-footer">
             <p>© 2026 InventoryPro - Vendor Portal. All rights reserved.</p>
           </div>
+
         </div>
       </div>
     </div>
